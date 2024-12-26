@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect
+from flask import Flask, render_template, session, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
@@ -81,9 +81,86 @@ def create_db():
 
 
 @app.route("/", methods=["GET", "POST"])
-def main():
+def home():
     return render_template("index.html")
 
+
+@app.route("/register", methods=["GET", "POST"])
+def reg():
+    if request.method=="POST":
+        account_type = request.form.get('account_type')
+        if account_type == "teacher":
+            name = request.form.get('full_name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            subject = request.form.get('subject')
+
+            conn = sqlite3.connect('database.db')
+            cur = conn.cursor()
+            cur.execute('''
+                INSERT INTO teacher (username, email, password, subject)
+                VALUES (?, ?, ?, ?)
+                ''', (name, email, password, subject))
+            conn.commit()
+            conn.close()
+
+            return redirect(url_for('home'))
+        else:
+            name = request.form.get('full_name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            conn = sqlite3.connect('database.db')
+            cur = conn.cursor()
+            cur.execute('''
+                INSERT INTO parent (username, email, password)
+                VALUES (?, ?, ?)
+                ''', (name, email, password))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('home'))
+        
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method=="POST":
+        account_type = request.form.get('account_type')
+        if account_type == "teacher":
+            name = request.form.get('full_name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            subject = request.form.get('subject')
+
+            conn = sqlite3.connect("database.db")
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM teacher WHERE email = ? and password = ?", (email, password))
+            user = cur.fetchone()
+            conn.close()
+
+            if user:
+                session["account_type"] = account_type
+                session["name"] = name
+                session["subject"] = subject
+                session['user_id'] = user[0]
+            return redirect(url_for("home"))
+        else:
+            name = request.form.get('full_name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+
+            conn = sqlite3.connect("database.db")
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM parent WHERE email = ? and password = ?", (email, password))
+            user = cur.fetchone()
+            conn.close()
+
+            if user:
+                session["account_type"] = account_type
+                session["name"] = name
+                session['user_id'] = user[0]
+            return redirect(url_for("home"))
+    return render_template("login.html")
+    
 if __name__=="__main__":
     create_db()
     app.run(debug=True)

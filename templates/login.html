@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reg-style.css') }}">
+    <script src="{{ url_for('static', filename='js/reg-scripts.js') }}" defer></script>
+</head>
+<body>
+    <main class="registration-page">
+        <div class="user-selection">
+            <h1>Регистрация</h1>
+            <p>Выберите, кто вы:</p>
+            <button class="user-type-button" id="parent-button">Родитель</button>
+            <button class="user-type-button" id="teacher-button">Учитель</button>
+        </div>
+
+        <form id="registration-form" method="POST" action="/login">
+            <input type="hidden" id="account-type" name="account_type" value="">
+        
+            <div id="common-fields" class="hidden">
+                <label for="full-name">ФИО:</label>
+                <input type="text" id="full-name" name="full_name" required>
+        
+                <label for="email">Почта:</label>
+                <input type="email" id="email" name="email" required>
+        
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+        
+            <div id="teacher-fields" class="hidden teacher-fields">
+                <label for="subject">Предмет:</label>
+                <input type="text" id="subject" name="subject">
+            </div>
+        
+            <button type="submit" class="submit-button">Зарегистрироваться</button>
+        </form>
+    </main>
+</body>
+</html>
