@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Школьные заявления</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+</head>
+<body class="light-theme">
+    <header class="header">
+        <div class="header-left">Школьные заявления</div>
+        <div class="header-right">
+            <button id="dropdown-button" class="dropdown-button">☰</button>
+            <div id="dropdown-menu" class="dropdown-menu hidden">
+                <button id="login-button" class="menu-item">Войти в аккаунт</button>
+                <button id="theme-toggle-button" class="menu-item">Сменить тему</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <button class="action-button" id="write-statement">Написать заявление</button>
+        <button class="action-button" id="absence-school">Отсутствие в школе</button>
+        <button class="action-button" id="absence-class">Отсутствие на уроке</button>
+        <button class="action-button" id="self-arrival">Самостоятельный приход и уход</button>
+    </main>
+
+    <button id="back-button" class="back-button hidden">← Назад</button>
+</body>
+</html>
