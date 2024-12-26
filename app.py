@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = 'ключик_секретик'
 
 
 def create_db():
@@ -142,8 +143,10 @@ def login():
                 session["name"] = name
                 session["subject"] = subject
                 session['user_id'] = user[0]
+            else:
+                return redirect(url_for('login'))
             return redirect(url_for("home"))
-        else:
+        elif account_type == "parent":
             name = request.form.get('full_name')
             email = request.form.get('email')
             password = request.form.get('password')
@@ -158,7 +161,11 @@ def login():
                 session["account_type"] = account_type
                 session["name"] = name
                 session['user_id'] = user[0]
+            else:
+                return redirect(url_for('login'))
             return redirect(url_for("home"))
+        else:
+            return redirect(url_for('login'))
     return render_template("login.html")
     
 if __name__=="__main__":

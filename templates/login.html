@@ -10,7 +10,7 @@
 <body>
     <main class="registration-page">
         <div class="user-selection">
-            <h1>Регистрация</h1>
+            <h1>Вход</h1>
             <p>Выберите, кто вы:</p>
             <button class="user-type-button" id="parent-button">Родитель</button>
             <button class="user-type-button" id="teacher-button">Учитель</button>
@@ -35,8 +35,9 @@
                 <input type="text" id="subject" name="subject">
             </div>
         
-            <button type="submit" class="submit-button">Зарегистрироваться</button>
+            <button type="submit" class="submit-button">Войти</button>
         </form>
+        <a href="{{url_for('reg')}}">Нет аккаунта? Зарегистрироваться</a>
     </main>
 </body>
 </html>
