@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, jsonify
 import sqlite3
 
 app = Flask(__name__)
@@ -79,16 +79,22 @@ def create_db():
     conn.commit()
     conn.close()
 
-
-
 @app.route("/", methods=["GET", "POST"])
 def home():
-    return render_template("index.html")
+    if 'account_type' in session:
+        if session['account_type'] == 'teacher':
+            return render_template("teacher.html")
+        elif session['account_type'] == 'parent':
+            return render_template("parent.html")
+        else:
+            return render_template("login.html")
+    else:    
+        return render_template("login.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
 def reg():
-    if request.method=="POST":
+    if request.method == "POST":
         account_type = request.form.get('account_type')
         if account_type == "teacher":
             name = request.form.get('full_name')
@@ -103,7 +109,15 @@ def reg():
                 VALUES (?, ?, ?, ?)
                 ''', (name, email, password, subject))
             conn.commit()
+            cur.execute("SELECT * FROM teacher WHERE email = ? and password = ?", (email, password))
+            user = cur.fetchone()
             conn.close()
+
+            if user:
+                session["account_type"] = account_type
+                session["name"] = user[1]
+                session["subject"] = user[4]
+                session['user_id'] = user[0]
 
             return redirect(url_for('home'))
         else:
@@ -117,20 +131,27 @@ def reg():
                 VALUES (?, ?, ?)
                 ''', (name, email, password))
             conn.commit()
+            cur.execute("SELECT * FROM parent WHERE email = ? and password = ?", (email, password))
+            user = cur.fetchone()
             conn.close()
+
+            
+            session["account_type"] = account_type
+            session["name"] = user[1]
+            session['user_id'] = user[0]
+
             return redirect(url_for('home'))
-        
+
     return render_template("register.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method=="POST":
+    if request.method == "POST":
         account_type = request.form.get('account_type')
         if account_type == "teacher":
-            name = request.form.get('full_name')
             email = request.form.get('email')
             password = request.form.get('password')
-            subject = request.form.get('subject')
 
             conn = sqlite3.connect("database.db")
             cur = conn.cursor()
@@ -140,14 +161,14 @@ def login():
 
             if user:
                 session["account_type"] = account_type
-                session["name"] = name
-                session["subject"] = subject
+                session["name"] = user[1]
+                session["subject"] = user[4]
                 session['user_id'] = user[0]
             else:
                 return redirect(url_for('login'))
             return redirect(url_for("home"))
+        
         elif account_type == "parent":
-            name = request.form.get('full_name')
             email = request.form.get('email')
             password = request.form.get('password')
 
@@ -159,7 +180,7 @@ def login():
 
             if user:
                 session["account_type"] = account_type
-                session["name"] = name
+                session["name"] = user[1]
                 session['user_id'] = user[0]
             else:
                 return redirect(url_for('login'))
@@ -167,7 +188,13 @@ def login():
         else:
             return redirect(url_for('login'))
     return render_template("login.html")
-    
-if __name__=="__main__":
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for('home'))
+
+if __name__ == "__main__":
     create_db()
     app.run(debug=True)
+

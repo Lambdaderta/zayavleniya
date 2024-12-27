@@ -18,7 +18,7 @@ body {
     text-align: center;
 }
 
-#common-fields {
+.common-fields {
     display: flex;
     flex-direction: column;
 }

@@ -19,7 +19,7 @@
         <form id="registration-form" method="POST" action="/login">
             <input type="hidden" id="account-type" name="account_type" value="">
         
-            <div id="common-fields" class="hidden">
+            <div id="common-fields" class="hidden common-fields">
                 <label for="full-name">ФИО:</label>
                 <input type="text" id="full-name" name="full_name" required>
         
@@ -35,7 +35,7 @@
                 <input type="text" id="subject" name="subject">
             </div>
         
-            <button type="submit" class="submit-button">Войти</button>
+            <button type="submit" class="submit-button hidden" id="sbm">Войти</button>
         </form>
         <a href="{{url_for('reg')}}">Нет аккаунта? Зарегистрироваться</a>
     </main>

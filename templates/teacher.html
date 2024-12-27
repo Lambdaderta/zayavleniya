@@ -13,19 +13,21 @@
         <div class="header-right">
             <button id="dropdown-button" class="dropdown-button">☰</button>
             <div id="dropdown-menu" class="dropdown-menu hidden">
-                <button id="login-button" class="menu-item">Войти в аккаунт</button>
+                <span id="username">{{ session.get('name', '') }}</span>
+                {% if 'name' in session %}
+                    <form action="{{ url_for('logout') }}" method="POST">
+                        <button type="submit" class="menu-item">Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="menu-item">Войти в аккаунт</a>
+                {% endif %}
                 <button id="theme-toggle-button" class="menu-item">Сменить тему</button>
             </div>
         </div>
     </header>
 
     <main class="main-content">
-        <button class="action-button" id="write-statement">Написать заявление</button>
-        <button class="action-button" id="absence-school">Отсутствие в школе</button>
-        <button class="action-button" id="absence-class">Отсутствие на уроке</button>
-        <button class="action-button" id="self-arrival">Самостоятельный приход и уход</button>
-
-        <div class="dynamic-content" id="dynamic-content"></div>
+        <p>HIIIIIIIIIIIIIIIIIIIIIH</p>
     </main>
 
     <button id="back-button" class="back-button hidden">← Назад</button>
